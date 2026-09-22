@@ -4,7 +4,6 @@ authors: [Pin-Han Chen, Yu-Sheng Lin, Wei-Cheng Lee, Tin-Yu Leu, Po-Hsiang Hsu, 
 venue: IEEE ICLAD 2025
 venueFull: IEEE International Conference on LLM-Aided Design (ICLAD) 2025
 year: 2025
-date: "2025-05-29"
 pages: 124–132
 links:
   arxiv: https://arxiv.org/abs/2505.22990

@@ -8,11 +8,13 @@ import { absoluteUrl, localePath } from '../i18n/utils';
 import { getCareer } from '../lib/content';
 import { site } from '../data/site';
 import { breadcrumbJsonLd, personJsonLd } from '../lib/seo';
+import { personImageUrl } from '../lib/person-image';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const experience = await getCareer('experience');
 const education = await getCareer('education');
+const personImage = await personImageUrl();
 const title = t(lang, 'about.title');
 const description =
   lang === 'en'
@@ -20,7 +22,7 @@ const description =
     : '關於許博翔：國立清華大學電機工程學系碩士生，研究 LLM 與 VLM，曾任職於 AMD、聯發科技與智邦科技。';
 const url = absoluteUrl(localePath(lang, 'about'));
 const jsonLd = [
-  personJsonLd(lang),
+  personJsonLd(lang, { image: personImage }),
   breadcrumbJsonLd([
     { name: t(lang, 'breadcrumb.home'), url: absoluteUrl(localePath(lang)) },
     { name: title, url },

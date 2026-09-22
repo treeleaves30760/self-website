@@ -30,16 +30,31 @@ describe('isOwner', () => {
 });
 
 describe('JSON-LD builders', () => {
-  it('builds a Person with sameAs links', () => {
+  it('builds a Person with a stable @id and sameAs links', () => {
     const p = personJsonLd('en');
     expect(p['@type']).toBe('Person');
+    expect(p['@id']).toBe('https://www.treeleaves30760.com/#person');
     expect(p['name']).toBe('Po-Hsiang Hsu');
     expect(p['alternateName']).toBe('許博翔');
     expect(p['sameAs']).toEqual(['https://github.com/treeleaves30760', 'https://www.linkedin.com/in/hsupohsiang/']);
     expect(p['url']).toBe('https://www.treeleaves30760.com/');
   });
-  it('builds a WebSite in the page language', () => {
-    expect(websiteJsonLd('zh')).toMatchObject({ '@type': 'WebSite', inLanguage: 'zh-Hant-TW', url: 'https://www.treeleaves30760.com/zh/' });
+  it('uses the given image for the Person', () => {
+    expect(personJsonLd('en', { image: 'https://example.com/a.jpg' })['image']).toBe('https://example.com/a.jpg');
+  });
+  it('omits the Person image when none is given', () => {
+    expect(personJsonLd('en')).not.toHaveProperty('image');
+  });
+  it('builds a WebSite in the page language, named in both languages', () => {
+    const w = websiteJsonLd('zh');
+    expect(w).toMatchObject({
+      '@type': 'WebSite',
+      name: '許博翔',
+      alternateName: 'Po-Hsiang Hsu',
+      inLanguage: 'zh-Hant-TW',
+      url: 'https://www.treeleaves30760.com/zh/',
+    });
+    expect(w['author']).toMatchObject({ '@type': 'Person', '@id': 'https://www.treeleaves30760.com/#person' });
   });
   it('builds an ordered BreadcrumbList', () => {
     const b = breadcrumbJsonLd([
@@ -70,7 +85,7 @@ describe('JSON-LD builders', () => {
       license: 'https://spdx.org/licenses/MIT',
       dateCreated: '2026',
     });
-    expect((s['author'] as Record<string, unknown>)['@type']).toBe('Person');
+    expect(s['author']).toMatchObject({ '@type': 'Person', '@id': 'https://www.treeleaves30760.com/#person' });
   });
   it('builds ScholarlyArticle with all authors', () => {
     const a = scholarlyArticleJsonLd('en', {
@@ -86,10 +101,11 @@ describe('JSON-LD builders', () => {
     expect(a['@type']).toBe('ScholarlyArticle');
     expect(a['author']).toEqual([
       { '@type': 'Person', name: 'Pin-Han Chen' },
-      { '@type': 'Person', name: 'Po-Hsiang Hsu', url: 'https://www.treeleaves30760.com/' },
+      { '@type': 'Person', '@id': 'https://www.treeleaves30760.com/#person', name: 'Po-Hsiang Hsu', url: 'https://www.treeleaves30760.com/' },
     ]);
     expect(a['sameAs']).toEqual(['https://arxiv.org/abs/2505.22990']);
-    expect(a['isPartOf']).toEqual({ '@type': 'PublicationEvent', name: 'IEEE International Conference on LLM-Aided Design (ICLAD) 2025' });
+    expect(a['publication']).toEqual({ '@type': 'PublicationEvent', name: 'IEEE International Conference on LLM-Aided Design (ICLAD) 2025' });
+    expect(a).not.toHaveProperty('isPartOf');
     expect(a['datePublished']).toBe('2025');
   });
 });

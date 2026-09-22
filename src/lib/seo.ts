@@ -1,5 +1,5 @@
 import type { Lang } from '../i18n/ui';
-import { HTML_LANG, absoluteUrl, localePath } from '../i18n/utils';
+import { HTML_LANG, absoluteUrl, localePath, otherLang } from '../i18n/utils';
 import { site } from '../data/site';
 
 export type JsonLd = Record<string, unknown>;
@@ -25,21 +25,26 @@ export function isOwner(name: string): boolean {
   return (site.ownerNames as readonly string[]).includes(name.trim());
 }
 
-const ownerRef = (lang: Lang): JsonLd => ({
+/** One node id for the site owner, so every Person reference resolves to the same entity. */
+const PERSON_ID = `${absoluteUrl(localePath('en'))}#person`;
+
+const ownerRef = (): JsonLd => ({
   '@type': 'Person',
+  '@id': PERSON_ID,
   name: site.owner.en,
   alternateName: site.owner.zh,
   url: absoluteUrl(localePath('en')),
 });
 
-export function personJsonLd(lang: Lang): JsonLd {
+export function personJsonLd(lang: Lang, opts: { image?: string } = {}): JsonLd {
   return {
     '@context': 'https://schema.org',
     '@type': 'Person',
+    '@id': PERSON_ID,
     name: site.owner.en,
     alternateName: site.owner.zh,
     url: absoluteUrl(localePath('en')),
-    image: `${site.url}/apple-touch-icon.png`,
+    ...(opts.image ? { image: opts.image } : {}),
     email: `mailto:${site.email}`,
     jobTitle: site.jobTitle[lang],
     affiliation: { '@type': 'CollegeOrUniversity', name: site.affiliation[lang] },
@@ -52,9 +57,10 @@ export function websiteJsonLd(lang: Lang): JsonLd {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: site.siteName[lang],
+    alternateName: site.siteName[otherLang(lang)],
     url: absoluteUrl(localePath(lang)),
     inLanguage: HTML_LANG[lang],
-    author: ownerRef(lang),
+    author: ownerRef(),
   };
 }
 
@@ -91,7 +97,7 @@ export function softwareSourceCodeJsonLd(
     programmingLanguage: p.languages,
     dateCreated: String(p.year),
     inLanguage: HTML_LANG[lang],
-    author: ownerRef(lang),
+    author: ownerRef(),
   };
   if (p.license) out.license = `https://spdx.org/licenses/${p.license}`;
   return out;
@@ -124,9 +130,9 @@ export function scholarlyArticleJsonLd(
     datePublished: p.date ?? String(p.year),
     inLanguage: 'en',
     author: p.authors.map((name) =>
-      isOwner(name) ? { '@type': 'Person', name, url: absoluteUrl(localePath('en')) } : { '@type': 'Person', name },
+      isOwner(name) ? { '@type': 'Person', '@id': PERSON_ID, name, url: absoluteUrl(localePath('en')) } : { '@type': 'Person', name },
     ),
-    isPartOf: { '@type': 'PublicationEvent', name: p.venueFull ?? p.venue },
+    publication: { '@type': 'PublicationEvent', name: p.venueFull ?? p.venue },
   };
   if (sameAs.length) out.sameAs = sameAs;
   if (p.pdf) out.encoding = { '@type': 'MediaObject', contentUrl: p.pdf, encodingFormat: 'application/pdf' };

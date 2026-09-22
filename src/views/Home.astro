@@ -10,14 +10,16 @@ import { localePath } from '../i18n/utils';
 import { getCareer, getProjects, getPublications } from '../lib/content';
 import { site } from '../data/site';
 import { personJsonLd, websiteJsonLd } from '../lib/seo';
+import { personImageUrl } from '../lib/person-image';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const projects = (await getProjects(lang)).filter((p) => p.data.featured);
 const pubs = await getPublications(lang);
 const career = [...(await getCareer('experience')), ...(await getCareer('education'))];
+const personImage = await personImageUrl();
 ---
-<Base lang={lang} description={site.homeDescription[lang]} path="" jsonLd={[personJsonLd(lang), websiteJsonLd(lang)]}>
+<Base lang={lang} description={site.homeDescription[lang]} path="" jsonLd={[personJsonLd(lang, { image: personImage }), websiteJsonLd(lang)]}>
   <Hero lang={lang} />
 
   <section id="projects" class="mt-16" aria-labelledby="projects-heading">
