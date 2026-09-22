@@ -16,5 +16,7 @@ Thumbs.db
 !.vscode/extensions.json
 .idea/
 
-# Local planning docs (superpowers specs & plans): kept on disk, never committed
+# Local planning docs and SDD workspace (superpowers specs, plans, task briefs
+# and reports): kept on disk, never committed
 docs/superpowers/
+.superpowers/
