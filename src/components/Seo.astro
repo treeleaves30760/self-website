@@ -16,7 +16,7 @@ const jsonText = JSON.stringify(json).replace(/</g, '\\u003c');
 ---
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
-<link rel="canonical" href={canonical} />
+{!noindex && <link rel="canonical" href={canonical} />}
 <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
 {alts.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
 <meta property="og:type" content={ogType} />

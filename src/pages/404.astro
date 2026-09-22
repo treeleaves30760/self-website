@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import { t } from '../i18n/ui';
+import { localePath } from '../i18n/utils';
+---
+<Base lang="en" title={t('en', 'notfound.title')} description="The page you are looking for does not exist. 你要找的頁面不存在。" path="" noindex>
+  <section class="py-16 text-center">
+    <p class="text-6xl font-bold text-accent">404</p>
+    <h1 class="mt-4 text-2xl font-semibold">{t('en', 'notfound.title')}</h1>
+    <p class="mt-2 text-muted">{t('en', 'notfound.body')}</p>
+    <p class="mt-6"><a href={localePath('en')} class="font-medium text-accent hover:text-accent-strong">{t('en', 'notfound.home')}</a></p>
+    <div lang="zh-Hant-TW" class="mx-auto mt-10 max-w-md border-t border-line pt-8">
+      <h2 class="text-xl font-semibold">{t('zh', 'notfound.title')}</h2>
+      <p class="mt-2 text-muted">{t('zh', 'notfound.body')}</p>
+      <p class="mt-4"><a href={localePath('zh')} class="font-medium text-accent hover:text-accent-strong">{t('zh', 'notfound.home')}</a></p>
+    </div>
+  </section>
+</Base>

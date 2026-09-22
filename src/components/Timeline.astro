@@ -1,0 +1,25 @@
+---
+import { t, type Lang } from '../i18n/ui';
+import { formatPeriod } from '../i18n/utils';
+import type { CareerEntry } from '../lib/content';
+
+interface Props { lang: Lang; items: CareerEntry[]; compact?: boolean }
+const { lang, items, compact = false } = Astro.props;
+---
+<ol class="relative border-l border-line pl-6">
+  {items.map((it) => {
+    const period = formatPeriod(lang, it.data.start, it.data.end);
+    return (
+      <li class="relative pb-8 last:pb-0">
+        <span class="absolute -left-[1.6rem] top-1.5 h-3 w-3 rounded-full border-2 border-accent bg-bg" aria-hidden="true"></span>
+        <div class="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+          <h3 class="font-semibold">{it.data.role[lang]} <span class="font-normal text-muted">· {it.data.org[lang]}</span></h3>
+          {period && <time class="shrink-0 text-sm text-muted" datetime={it.data.start}>{period}</time>}
+        </div>
+        {!compact && it.data.location && <p class="mt-1 text-sm text-muted">{it.data.location[lang]}</p>}
+        {!compact && it.data.summary && <p class="mt-2 text-sm leading-relaxed">{it.data.summary[lang]}</p>}
+        {!compact && it.data.skills && <ul class="mt-2 flex flex-wrap gap-1.5" aria-label={t(lang, 'about.skills')}>{it.data.skills.map((s) => <li class="rounded-full border border-line px-2 py-0.5 text-xs text-muted">{s}</li>)}</ul>}
+      </li>
+    );
+  })}
+</ol>

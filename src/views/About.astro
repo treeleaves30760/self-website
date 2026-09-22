@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import Timeline from '../components/Timeline.astro';
+import Icon from '../components/Icon.astro';
+import { t, type Lang } from '../i18n/ui';
+import { absoluteUrl, localePath } from '../i18n/utils';
+import { getCareer } from '../lib/content';
+import { site } from '../data/site';
+import { breadcrumbJsonLd, personJsonLd } from '../lib/seo';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const experience = await getCareer('experience');
+const education = await getCareer('education');
+const title = t(lang, 'about.title');
+const description =
+  lang === 'en'
+    ? 'About Po-Hsiang Hsu (許博翔): M.S. student in Electrical Engineering at NTHU researching LLMs and VLMs, with experience at AMD, MediaTek and Accton.'
+    : '關於許博翔：國立清華大學電機工程學系碩士生，研究 LLM 與 VLM，曾任職於 AMD、聯發科技與智邦科技。';
+const url = absoluteUrl(localePath(lang, 'about'));
+const jsonLd = [
+  personJsonLd(lang),
+  breadcrumbJsonLd([
+    { name: t(lang, 'breadcrumb.home'), url: absoluteUrl(localePath(lang)) },
+    { name: title, url },
+  ]),
+];
+const contacts = [
+  { href: site.github, label: 'GitHub', text: 'github.com/treeleaves30760', icon: 'github' as const },
+  { href: site.linkedin, label: 'LinkedIn', text: 'linkedin.com/in/hsupohsiang', icon: 'linkedin' as const },
+  { href: `mailto:${site.email}`, label: 'Email', text: site.email, icon: 'mail' as const },
+];
+---
+<Base lang={lang} title={title} description={description} path="about" jsonLd={jsonLd}>
+  <Breadcrumb lang={lang} items={[{ name: title }]} />
+  <h1 class="text-3xl font-bold tracking-tight">{title}</h1>
+  <div class="mt-6 max-w-3xl space-y-4 leading-relaxed">
+    {site.about[lang].map((p) => <p>{p}</p>)}
+  </div>
+
+  <section class="mt-12">
+    <h2 class="text-xl font-semibold">{t(lang, 'about.experience')}</h2>
+    <div class="mt-5"><Timeline lang={lang} items={experience} /></div>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="text-xl font-semibold">{t(lang, 'about.education')}</h2>
+    <div class="mt-5"><Timeline lang={lang} items={education} /></div>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="text-xl font-semibold">{t(lang, 'about.contact')}</h2>
+    <ul class="mt-4 space-y-2">
+      {contacts.map((c) => (
+        <li><a href={c.href} rel="me noopener" class="inline-flex items-center gap-2 text-muted hover:text-fg"><Icon name={c.icon} class="h-4 w-4" /><span class="font-medium text-fg">{c.label}</span><span>{c.text}</span></a></li>
+      ))}
+    </ul>
+  </section>
+</Base>
