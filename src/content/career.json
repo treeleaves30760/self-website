@@ -1,0 +1,52 @@
+[
+  {
+    "id": "amd-2026",
+    "type": "experience",
+    "org": { "en": "AMD", "zh": "AMD" },
+    "role": { "en": "Software Engineer (Contract)", "zh": "軟體工程師（約聘）" },
+    "location": { "en": "Remote", "zh": "遠距" },
+    "start": "2026-03",
+    "end": "2026-07",
+    "summary": {
+      "en": "HPC system planning and building; development and maintenance of the AMD University Research Learning Cloud.",
+      "zh": "HPC 系統規劃與建置；AMD University Research Learning Cloud 的開發與維護。"
+    },
+    "skills": ["HPC", "Proxmox VE"],
+    "order": 1
+  },
+  {
+    "id": "mediatek-2024",
+    "type": "experience",
+    "org": { "en": "MediaTek", "zh": "聯發科技" },
+    "role": { "en": "LLM Intern", "zh": "LLM 實習生" },
+    "location": { "en": "Hsinchu, Taiwan", "zh": "台灣新竹" },
+    "start": "2024-10",
+    "end": "2025-10",
+    "summary": {
+      "en": "Large language model research; co-authored MenTeR, a multi-agent workflow for RF/analog netlist design (IEEE ICLAD 2025).",
+      "zh": "大型語言模型研究；共同發表 MenTeR，一套用於 RF／類比電路 netlist 設計的多代理工作流程（IEEE ICLAD 2025）。"
+    },
+    "skills": ["Large Language Models", "Python"],
+    "order": 2
+  },
+  {
+    "id": "accton-2024",
+    "type": "experience",
+    "org": { "en": "Accton Technology", "zh": "智邦科技" },
+    "role": { "en": "FPGA Intern", "zh": "FPGA 實習生" },
+    "location": { "en": "Hsinchu, Taiwan", "zh": "台灣新竹" },
+    "start": "2024-04",
+    "end": "2024-08",
+    "skills": ["C++", "Python", "FPGA"],
+    "order": 3
+  },
+  {
+    "id": "nthu-ms",
+    "type": "education",
+    "org": { "en": "National Tsing Hua University", "zh": "國立清華大學" },
+    "role": { "en": "M.S. in Electrical Engineering", "zh": "電機工程學系碩士" },
+    "location": { "en": "Hsinchu, Taiwan", "zh": "台灣新竹" },
+    "end": "present",
+    "order": 1
+  }
+]
