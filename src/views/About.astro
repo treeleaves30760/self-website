@@ -53,7 +53,7 @@ const contacts = [
     <h2 class="text-xl font-semibold">{t(lang, 'about.contact')}</h2>
     <ul class="mt-4 space-y-2">
       {contacts.map((c) => (
-        <li><a href={c.href} rel="me noopener" class="inline-flex items-center gap-2 text-muted hover:text-fg"><Icon name={c.icon} class="h-4 w-4" /><span class="font-medium text-fg">{c.label}</span><span>{c.text}</span></a></li>
+        <li><a href={c.href} rel="me noopener" class="inline-flex flex-wrap items-center gap-x-2 text-muted hover:text-fg"><Icon name={c.icon} class="h-4 w-4" /><span class="font-medium text-fg">{c.label}</span><span class="min-w-0 [overflow-wrap:anywhere]">{c.text}</span></a></li>
       ))}
     </ul>
   </section>

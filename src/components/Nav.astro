@@ -13,16 +13,17 @@ const links = [
   { href: localePath(lang, 'publications'), label: t(lang, 'nav.publications') },
   { href: localePath(lang, 'about'), label: t(lang, 'nav.about') },
 ];
-const isCurrent = (href: string) => current === href || current.startsWith(href);
+/** 'page' on the section's own page, 'true' on a page inside the section (e.g. a project detail). */
+const ariaCurrent = (href: string) => (current === href ? 'page' : current.startsWith(href) ? 'true' : undefined);
 ---
 <header class="sticky top-0 z-40 border-b border-line/70 bg-bg/85 backdrop-blur">
-  <nav class="mx-auto flex h-14 max-w-5xl items-center justify-between gap-3 px-4 sm:px-6" aria-label="Main">
-    <a href={localePath(lang)} class="truncate font-semibold tracking-tight text-fg hover:text-accent">{site.owner[lang]}</a>
-    <div class="flex items-center gap-0.5 sm:gap-1">
+  <nav class="mx-auto flex min-h-14 max-w-5xl flex-wrap items-center justify-between gap-x-3 gap-y-1 px-4 py-2 sm:h-14 sm:flex-nowrap sm:px-6 sm:py-0" aria-label="Main">
+    <a href={localePath(lang)} class="shrink-0 whitespace-nowrap font-semibold tracking-tight text-fg hover:text-accent">{site.owner[lang]}</a>
+    <div class="flex flex-wrap items-center justify-end gap-0.5 sm:gap-1">
       {links.map((l) => (
-        <a href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined} class="rounded-md px-2 py-1.5 text-sm text-muted transition hover:bg-surface hover:text-fg aria-[current=page]:text-accent sm:px-2.5">{l.label}</a>
+        <a href={l.href} aria-current={ariaCurrent(l.href)} class="rounded-md px-1 py-1.5 text-sm whitespace-nowrap text-muted transition hover:bg-surface hover:text-fg aria-[current=page]:text-accent aria-[current=true]:text-accent sm:px-2.5">{l.label}</a>
       ))}
-      <a href={localePath(other, path)} lang={HTML_LANG[other]} hreflang={other === 'zh' ? 'zh-TW' : 'en'} aria-label={t(lang, 'nav.switchLangAria')} class="rounded-md px-2 py-1.5 text-sm text-muted transition hover:bg-surface hover:text-fg sm:px-2.5">{t(lang, 'nav.switchLang')}</a>
+      <a href={localePath(other, path)} lang={HTML_LANG[other]} hreflang={other === 'zh' ? 'zh-TW' : 'en'} aria-label={t(lang, 'nav.switchLangAria')} class="rounded-md px-1 py-1.5 text-sm whitespace-nowrap text-muted transition hover:bg-surface hover:text-fg sm:px-2.5">{t(lang, 'nav.switchLang')}</a>
       <ThemeToggle lang={lang} />
     </div>
   </nav>
