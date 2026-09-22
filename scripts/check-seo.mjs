@@ -1,6 +1,7 @@
 // Verifies the built site in dist/. Run after `astro build`.
 // Rules: one title/description/canonical per page (unique, correct), hreflang trio
-// pointing at built pages, valid JSON-LD, html lang per locale, internal links
+// pointing at built pages (en/zh-TW twins of the page, x-default = en, each code
+// once), valid JSON-LD, html lang per locale, internal links
 // resolve, locale parity, sitemap covers every route with alternates, 404 is
 // noindex, static delivery files present.
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
@@ -73,9 +74,14 @@ for (const file of pages) {
     fail(route, `canonical is ${canon[0].getAttribute('href')}, expected ${SITE}${route}`);
   }
 
-  const alts = new Map(
-    root.querySelectorAll('link[rel="alternate"][hreflang]').map((el) => [el.getAttribute('hreflang'), el.getAttribute('href')]),
-  );
+  const altEls = root.querySelectorAll('link[rel="alternate"][hreflang]');
+  const alts = new Map(altEls.map((el) => [el.getAttribute('hreflang'), el.getAttribute('href')]));
+  const codeCounts = new Map();
+  for (const el of altEls) {
+    const code = el.getAttribute('hreflang');
+    codeCounts.set(code, (codeCounts.get(code) ?? 0) + 1);
+  }
+  for (const [code, n] of codeCounts) if (n > 1) fail(route, `hreflang="${code}" appears ${n} times`);
   for (const code of ['en', 'zh-TW', 'x-default']) {
     const href = alts.get(code);
     if (!href) {
@@ -88,9 +94,18 @@ for (const file of pages) {
     }
     if (!pathExists(href.slice(SITE.length))) fail(route, `hreflang ${code} points to a missing page: ${href}`);
   }
-  const selfCode = expectLang === 'en' ? 'en' : 'zh-TW';
-  if (alts.get(selfCode) && alts.get(selfCode) !== `${SITE}${route}`) {
-    fail(route, `self hreflang ${alts.get(selfCode)} does not match the page URL`);
+  // Both twins of a page carry the same pair: en -> English URL, zh-TW -> /zh URL, x-default -> English URL.
+  const enRoute = route.startsWith('/zh/') ? route.slice('/zh'.length) : route;
+  const expectedAlt = new Map([
+    ['en', `${SITE}${enRoute}`],
+    ['zh-TW', `${SITE}/zh${enRoute}`],
+    ['x-default', `${SITE}${enRoute}`],
+  ]);
+  for (const el of altEls) {
+    const code = el.getAttribute('hreflang');
+    const href = el.getAttribute('href');
+    const want = expectedAlt.get(code);
+    if (want && href !== want) fail(route, `hreflang ${code} is ${href}, expected ${want}`);
   }
 
   const ldScripts = root.querySelectorAll('script[type="application/ld+json"]');
