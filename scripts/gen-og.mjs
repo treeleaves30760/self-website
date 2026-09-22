@@ -2,15 +2,32 @@
 // public/favicon.ico (32, PNG payload) from inline SVG using resvg with explicit
 // font files, so the Chinese name renders identically on every run.
 // Override fonts with OG_FONTS="path1;path2" if not on Windows.
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { Resvg } from '@resvg/resvg-js';
 
-const FONTS = process.env.OG_FONTS?.split(';').filter(Boolean) ?? [
+const DEFAULT_FONTS = [
   'C:/Windows/Fonts/segoeui.ttf',
   'C:/Windows/Fonts/segoeuib.ttf',
   'C:/Windows/Fonts/msjh.ttc',
   'C:/Windows/Fonts/msjhbd.ttc',
 ];
+// An unset, empty or whitespace-only OG_FONTS falls back to the defaults.
+const envFonts = process.env.OG_FONTS?.split(';').map((s) => s.trim()).filter(Boolean) ?? [];
+const FONTS = envFonts.length > 0 ? envFonts : DEFAULT_FONTS;
+
+// resvg does not fail on a font file it cannot load; it renders anyway with wrong
+// or missing glyphs. Check every font file exists before anything is rendered or written.
+const missingFonts = FONTS.filter((path) => !existsSync(path));
+if (missingFonts.length > 0) {
+  console.error(
+    [
+      `gen-og: ${missingFonts.length} font file(s) not found:`,
+      ...missingFonts.map((path) => `  - ${path}`),
+      'Set OG_FONTS="path1;path2" to font files that exist on this machine. Nothing was written.',
+    ].join('\n'),
+  );
+  process.exit(1);
+}
 
 const font = { fontFiles: FONTS, loadSystemFonts: false, defaultFontFamily: 'Segoe UI' };
 
