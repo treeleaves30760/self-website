@@ -1,0 +1,43 @@
+---
+import type { SeoProps } from '../lib/seo';
+import { pageTitle } from '../lib/seo';
+import { OG_LOCALE, absoluteUrl, alternates, assetUrl, localePath, otherLang } from '../i18n/utils';
+import { site } from '../data/site';
+
+type Props = SeoProps;
+const { lang, title, description, path, noindex = false, jsonLd = [], ogType = 'website' } = Astro.props;
+
+const fullTitle = pageTitle(lang, title);
+const canonical = absoluteUrl(localePath(lang, path));
+const alts = noindex ? [] : alternates(path);
+const ogImage = assetUrl('og.png');
+const json = jsonLd.length === 1 ? jsonLd[0] : jsonLd;
+const jsonText = JSON.stringify(json).replace(/</g, '\\u003c');
+---
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+{alts.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content={site.siteName[lang]} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={`${site.owner.en} (${site.owner.zh})`} />
+<meta property="og:locale" content={OG_LOCALE[lang]} />
+<meta property="og:locale:alternate" content={OG_LOCALE[otherLang(lang)]} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#020617" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon.ico" sizes="32x32" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+{jsonLd.length > 0 && <script type="application/ld+json" is:inline set:html={jsonText}></script>}

@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import type { Lang } from '../i18n/ui';
+import { site } from '../data/site';
+import { personJsonLd, websiteJsonLd } from '../lib/seo';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+<Base lang={lang} description={site.homeDescription[lang]} path="" jsonLd={[personJsonLd(lang), websiteJsonLd(lang)]}>
+  <Hero lang={lang} />
+</Base>

@@ -1,0 +1,22 @@
+---
+import { t, type Lang } from '../i18n/ui';
+import { HTML_LANG, localePath, otherLang } from '../i18n/utils';
+import { site } from '../data/site';
+import Icon from './Icon.astro';
+
+interface Props { lang: Lang; path: string }
+const { lang, path } = Astro.props;
+const other = otherLang(lang);
+const year = new Date().getFullYear();
+---
+<footer class="mt-16 border-t border-line/70">
+  <div class="mx-auto flex max-w-5xl flex-col gap-4 px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
+    <p>© {year} {site.owner.en} ({site.owner.zh}). {t(lang, 'footer.rights')}</p>
+    <ul class="flex items-center gap-4">
+      <li><a href={site.github} rel="me noopener" class="inline-flex items-center gap-1.5 hover:text-fg"><Icon name="github" class="h-4 w-4" /><span>GitHub</span></a></li>
+      <li><a href={site.linkedin} rel="me noopener" class="inline-flex items-center gap-1.5 hover:text-fg"><Icon name="linkedin" class="h-4 w-4" /><span>LinkedIn</span></a></li>
+      <li><a href={`mailto:${site.email}`} class="inline-flex items-center gap-1.5 hover:text-fg"><Icon name="mail" class="h-4 w-4" /><span>Email</span></a></li>
+      <li><a href={localePath(other, path)} lang={HTML_LANG[other]} class="hover:text-fg">{t(lang, 'nav.switchLang')}</a></li>
+    </ul>
+  </div>
+</footer>
