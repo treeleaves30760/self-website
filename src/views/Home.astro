@@ -1,13 +1,50 @@
 ---
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
-import type { Lang } from '../i18n/ui';
+import ProjectCard from '../components/ProjectCard.astro';
+import PublicationItem from '../components/PublicationItem.astro';
+import Timeline from '../components/Timeline.astro';
+import Icon from '../components/Icon.astro';
+import { t, type Lang } from '../i18n/ui';
+import { localePath } from '../i18n/utils';
+import { getCareer, getProjects, getPublications } from '../lib/content';
 import { site } from '../data/site';
 import { personJsonLd, websiteJsonLd } from '../lib/seo';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
+const projects = (await getProjects(lang)).filter((p) => p.data.featured);
+const pubs = await getPublications(lang);
+const career = [...(await getCareer('experience')), ...(await getCareer('education'))];
 ---
 <Base lang={lang} description={site.homeDescription[lang]} path="" jsonLd={[personJsonLd(lang), websiteJsonLd(lang)]}>
   <Hero lang={lang} />
+
+  <section id="projects" class="mt-16" aria-labelledby="projects-heading">
+    <div class="flex items-baseline justify-between gap-4">
+      <h2 id="projects-heading" class="text-2xl font-bold tracking-tight">{t(lang, 'home.projects')}</h2>
+      <a href={localePath(lang, 'projects')} class="inline-flex items-center gap-1 text-sm font-medium text-accent hover:text-accent-strong"><span>{t(lang, 'home.seeAll')}</span><Icon name="arrow" class="h-4 w-4" /></a>
+    </div>
+    <div class="mt-6 grid gap-5 sm:grid-cols-2">
+      {projects.map((entry) => <ProjectCard lang={lang} entry={entry} />)}
+    </div>
+  </section>
+
+  <section id="publications" class="mt-16" aria-labelledby="publications-heading">
+    <div class="flex items-baseline justify-between gap-4">
+      <h2 id="publications-heading" class="text-2xl font-bold tracking-tight">{t(lang, 'home.publications')}</h2>
+      <a href={localePath(lang, 'publications')} class="inline-flex items-center gap-1 text-sm font-medium text-accent hover:text-accent-strong"><span>{t(lang, 'home.seeAll')}</span><Icon name="arrow" class="h-4 w-4" /></a>
+    </div>
+    <div class="mt-6 flex flex-col gap-5">
+      {pubs.map((entry) => <PublicationItem lang={lang} entry={entry} />)}
+    </div>
+  </section>
+
+  <section id="career" class="mt-16" aria-labelledby="career-heading">
+    <div class="flex items-baseline justify-between gap-4">
+      <h2 id="career-heading" class="text-2xl font-bold tracking-tight">{t(lang, 'home.career')}</h2>
+      <a href={localePath(lang, 'about')} class="inline-flex items-center gap-1 text-sm font-medium text-accent hover:text-accent-strong"><span>{t(lang, 'nav.about')}</span><Icon name="arrow" class="h-4 w-4" /></a>
+    </div>
+    <div class="mt-6"><Timeline lang={lang} items={career} compact /></div>
+  </section>
 </Base>
