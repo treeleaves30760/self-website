@@ -1,0 +1,6 @@
+---
+import { isOwner } from '../lib/seo';
+interface Props { authors: string[]; class?: string }
+const { authors, class: className = 'text-sm text-muted' } = Astro.props;
+---
+<p class={className}>{authors.map((a, i) => <Fragment>{i > 0 ? ', ' : ''}{isOwner(a) ? <strong class="font-semibold text-fg">{a}</strong> : <span>{a}</span>}</Fragment>)}</p>

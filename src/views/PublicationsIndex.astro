@@ -1,0 +1,34 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import PublicationItem from '../components/PublicationItem.astro';
+import { t, type Lang } from '../i18n/ui';
+import { absoluteUrl, localePath } from '../i18n/utils';
+import { getPublications } from '../lib/content';
+import { breadcrumbJsonLd, collectionPageJsonLd } from '../lib/seo';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const pubs = await getPublications(lang);
+const title = t(lang, 'publications.title');
+const description =
+  lang === 'en'
+    ? 'Papers by Po-Hsiang Hsu: Inductive Visual Logic (ECCV 2026) on few-shot adaptation of VLMs and MenTeR (IEEE ICLAD 2025) on LLM agents for analog design.'
+    : '許博翔的論文：Inductive Visual Logic（ECCV 2026）探討視覺語言模型的少樣本分布外適應；MenTeR（IEEE ICLAD 2025）以多代理 LLM 自動設計類比電路。';
+const url = absoluteUrl(localePath(lang, 'publications'));
+const jsonLd = [
+  collectionPageJsonLd(lang, { name: title, description, url }),
+  breadcrumbJsonLd([
+    { name: t(lang, 'breadcrumb.home'), url: absoluteUrl(localePath(lang)) },
+    { name: title, url },
+  ]),
+];
+---
+<Base lang={lang} title={title} description={description} path="publications" jsonLd={jsonLd}>
+  <Breadcrumb lang={lang} items={[{ name: title }]} />
+  <h1 class="text-3xl font-bold tracking-tight">{title}</h1>
+  <p class="mt-2 text-muted">{t(lang, 'publications.intro')}</p>
+  <div class="mt-8 flex flex-col gap-5">
+    {pubs.map((entry) => <PublicationItem lang={lang} entry={entry} />)}
+  </div>
+</Base>
