@@ -1,0 +1,19 @@
+---
+import { t, type Lang } from '../i18n/ui';
+import { localePath } from '../i18n/utils';
+
+interface Props { lang: Lang; items: { name: string; href?: string }[] }
+const { lang, items } = Astro.props;
+const all = [{ name: t(lang, 'breadcrumb.home'), href: localePath(lang) }, ...items];
+const last = all.length - 1;
+---
+<nav aria-label="Breadcrumb" class="mb-6 text-sm text-muted">
+  <ol class="flex flex-wrap items-center gap-1.5">
+    {all.map((it, i) => (
+      <li class="flex items-center gap-1.5">
+        {i > 0 && <span aria-hidden="true">/</span>}
+        {it.href && i < last ? <a href={it.href} class="hover:text-fg">{it.name}</a> : <span aria-current="page" class="text-fg">{it.name}</span>}
+      </li>
+    ))}
+  </ol>
+</nav>

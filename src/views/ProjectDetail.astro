@@ -1,0 +1,61 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import LinkButtons from '../components/LinkButtons.astro';
+import { t, type Lang } from '../i18n/ui';
+import { absoluteUrl, localePath } from '../i18n/utils';
+import { slugOf, type ProjectEntry } from '../lib/content';
+import { breadcrumbJsonLd, softwareSourceCodeJsonLd } from '../lib/seo';
+
+interface Props { lang: Lang; entry: ProjectEntry }
+const { lang, entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const path = `projects/${slugOf(entry)}`;
+const url = absoluteUrl(localePath(lang, path));
+
+type Link = { href: string; label: string };
+const links: Link[] = [{ href: d.links.repo, label: t(lang, 'project.repo') }];
+if (d.links.docs) links.push({ href: d.links.docs, label: t(lang, 'project.docs') });
+if (d.links.homepage) links.push({ href: d.links.homepage, label: t(lang, 'project.homepage') });
+if (d.links.pypi) links.push({ href: d.links.pypi, label: t(lang, 'project.pypi') });
+
+const jsonLd = [
+  softwareSourceCodeJsonLd(lang, {
+    name: d.title,
+    description: d.description,
+    url,
+    repo: d.links.repo,
+    languages: d.tech,
+    license: d.license,
+    year: d.year,
+  }),
+  breadcrumbJsonLd([
+    { name: t(lang, 'breadcrumb.home'), url: absoluteUrl(localePath(lang)) },
+    { name: t(lang, 'projects.title'), url: absoluteUrl(localePath(lang, 'projects')) },
+    { name: d.title, url },
+  ]),
+];
+---
+<Base lang={lang} title={d.title} description={d.description} path={path} jsonLd={jsonLd} ogType="article">
+  <Breadcrumb lang={lang} items={[{ name: t(lang, 'projects.title'), href: localePath(lang, 'projects') }, { name: d.title }]} />
+  <article>
+    <header>
+      <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{d.title}</h1>
+      <p class="mt-3 text-lg text-muted">{d.description}</p>
+      <ul class="mt-4 flex flex-wrap gap-1.5" aria-label="Tags">
+        {d.tags.map((tag) => <li class="rounded-full border border-line px-2.5 py-0.5 text-xs text-muted">{tag}</li>)}
+      </ul>
+      <LinkButtons links={links} />
+    </header>
+    <div class="prose mt-8 max-w-3xl">
+      <Content />
+    </div>
+    <dl class="mt-10 grid gap-4 rounded-xl border border-line bg-surface p-5 text-sm sm:grid-cols-3">
+      <div><dt class="text-muted">{t(lang, 'project.year')}</dt><dd class="mt-1 font-medium">{d.year}</dd></div>
+      <div><dt class="text-muted">{t(lang, 'project.tech')}</dt><dd class="mt-1 font-medium">{d.tech.join(' · ')}</dd></div>
+      {d.license && <div><dt class="text-muted">{t(lang, 'project.license')}</dt><dd class="mt-1 font-medium">{d.license}</dd></div>}
+    </dl>
+  </article>
+</Base>
