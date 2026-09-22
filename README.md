@@ -25,5 +25,5 @@ pnpm verify     # type-check, unit tests, build and SEO checks
 - `public/` — favicons, Open Graph image, `robots.txt`, and Cloudflare's `_headers` file.
 - `scripts/` — `gen-og.mjs` regenerates the Open Graph image and favicons; `check-seo.mjs` verifies the built site.
 - `wrangler.jsonc` — Cloudflare Workers static-assets configuration.
-- `.github/workflows/ci.yml` — runs type-check, unit tests, build and SEO checks on every push and pull request.
-- `LICENSE` — MIT for the code; text, images and papers are © Po-Hsiang Hsu.
+- `.github/workflows/ci.yml` — runs type-check, unit tests, build and SEO checks on pushes to `main` and on pull requests.
+- `LICENSE` — MIT for the code; the site's text and images are © Po-Hsiang Hsu.
