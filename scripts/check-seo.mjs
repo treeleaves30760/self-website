@@ -4,7 +4,7 @@
 // resolve, locale parity, sitemap covers every route with alternates, 404 is
 // noindex, static delivery files present.
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
-import { dirname, join, relative, sep } from 'node:path';
+import { basename, dirname, join, relative, sep } from 'node:path';
 import { parse } from 'node-html-parser';
 
 const DIST = 'dist';
@@ -28,7 +28,7 @@ if (!existsSync(DIST)) {
 }
 
 const files = walk(DIST);
-const pages = files.filter((f) => f.endsWith('index.html'));
+const pages = files.filter((f) => basename(f) === 'index.html');
 const routeOf = (file) => {
   const rel = relative(DIST, dirname(file)).split(sep).filter(Boolean).join('/');
   return rel ? `/${rel}/` : '/';
