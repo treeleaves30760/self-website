@@ -58,9 +58,10 @@ export function otherLang(lang: Lang): Lang {
 
 const EN_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-/** '2026-03' -> 'Mar 2026' (en) or '2026年3月' (zh) */
+/** '2026-03' -> 'Mar 2026' (en) or '2026年3月' (zh); a bare year '2020' -> '2020' (en) or '2020年' (zh) */
 export function formatYearMonth(lang: Lang, ym: string): string {
   const [y, m] = ym.split('-').map(Number);
+  if (m === undefined) return lang === 'zh' ? `${y}年` : String(y);
   if (lang === 'zh') return `${y}年${m}月`;
   return `${EN_MONTHS[m - 1]} ${y}`;
 }

@@ -46,7 +46,18 @@
     "org": { "en": "National Tsing Hua University", "zh": "國立清華大學" },
     "role": { "en": "M.S. in Electrical Engineering", "zh": "電機工程學系碩士" },
     "location": { "en": "Hsinchu, Taiwan", "zh": "台灣新竹" },
+    "start": "2024",
     "end": "present",
     "order": 1
+  },
+  {
+    "id": "nthu-bs",
+    "type": "education",
+    "org": { "en": "National Tsing Hua University", "zh": "國立清華大學" },
+    "role": { "en": "Bachelor's degree in Electrical Engineering", "zh": "電機工程學系學士" },
+    "location": { "en": "Hsinchu, Taiwan", "zh": "台灣新竹" },
+    "start": "2020",
+    "end": "2024",
+    "order": 2
   }
 ]

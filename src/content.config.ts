@@ -3,7 +3,7 @@ import { file, glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 const localized = z.object({ en: z.string(), zh: z.string() });
-const yearMonth = z.string().regex(/^\d{4}-\d{2}$/, 'use YYYY-MM');
+const yearMonth = z.string().regex(/^\d{4}(-\d{2})?$/, 'use YYYY or YYYY-MM');
 const shortText = z.string().min(30).max(160);
 
 const projects = defineCollection({

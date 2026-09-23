@@ -85,6 +85,16 @@ describe('dates', () => {
     expect(formatPeriod('en', undefined, 'present')).toBe('');
     expect(formatPeriod('en', '2024-04')).toBe('Apr 2024');
   });
+  it('formats a bare year per locale', () => {
+    expect(formatYearMonth('en', '2020')).toBe('2020');
+    expect(formatYearMonth('zh', '2020')).toBe('2020年');
+  });
+  it('formats year-only periods, closed and present', () => {
+    expect(formatPeriod('en', '2020', '2024')).toBe('2020 – 2024');
+    expect(formatPeriod('zh', '2020', '2024')).toBe('2020年 – 2024年');
+    expect(formatPeriod('en', '2024', 'present')).toBe('2024 – Present');
+    expect(formatPeriod('zh', '2024', 'present')).toBe('2024年 – 至今');
+  });
 });
 
 describe('t', () => {
