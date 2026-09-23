@@ -10,6 +10,7 @@ export const site = {
   email: 'treeleaves30760@gmail.com',
   github: 'https://github.com/treeleaves30760',
   linkedin: 'https://www.linkedin.com/in/hsupohsiang/',
+  scholar: 'https://scholar.google.com/citations?user=J6DALFIAAAAJ',
   siteName: { en: 'Po-Hsiang Hsu', zh: '許博翔' } satisfies L,
   homeTitle: {
     en: 'Po-Hsiang Hsu (許博翔) · LLM & VLM Research, NTHU EE',

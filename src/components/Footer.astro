@@ -12,9 +12,10 @@ const year = new Date().getFullYear();
 <footer class="mt-16 border-t border-line/70">
   <div class="mx-auto flex max-w-5xl flex-col gap-4 px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
     <p>© {year} {site.owner.en} ({site.owner.zh}). {t(lang, 'footer.rights')}</p>
-    <ul class="flex items-center gap-4">
+    <ul class="flex flex-wrap items-center gap-x-4 gap-y-2">
       <li><a href={site.github} rel="me noopener" class="inline-flex items-center gap-1.5 hover:text-fg"><Icon name="github" class="h-4 w-4" /><span>GitHub</span></a></li>
       <li><a href={site.linkedin} rel="me noopener" class="inline-flex items-center gap-1.5 hover:text-fg"><Icon name="linkedin" class="h-4 w-4" /><span>LinkedIn</span></a></li>
+      <li><a href={site.scholar} rel="me noopener" class="inline-flex items-center gap-1.5 hover:text-fg"><Icon name="scholar" class="h-4 w-4" /><span>Google Scholar</span></a></li>
       <li><a href={`mailto:${site.email}`} class="inline-flex items-center gap-1.5 hover:text-fg"><Icon name="mail" class="h-4 w-4" /><span>Email</span></a></li>
       <li><a href={localePath(other, path)} lang={HTML_LANG[other]} hreflang={other === 'zh' ? 'zh-TW' : 'en'} class="hover:text-fg">{t(lang, 'nav.switchLang')}</a></li>
     </ul>

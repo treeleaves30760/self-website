@@ -48,7 +48,7 @@ export function personJsonLd(lang: Lang, opts: { image?: string } = {}): JsonLd 
     email: `mailto:${site.email}`,
     jobTitle: site.jobTitle[lang],
     affiliation: { '@type': 'CollegeOrUniversity', name: site.affiliation[lang] },
-    sameAs: [site.github, site.linkedin],
+    sameAs: [site.github, site.linkedin, site.scholar],
   };
 }
 

@@ -36,7 +36,7 @@ describe('JSON-LD builders', () => {
     expect(p['@id']).toBe('https://www.treeleaves30760.com/#person');
     expect(p['name']).toBe('Po-Hsiang Hsu');
     expect(p['alternateName']).toBe('許博翔');
-    expect(p['sameAs']).toEqual(['https://github.com/treeleaves30760', 'https://www.linkedin.com/in/hsupohsiang/']);
+    expect(p['sameAs']).toEqual(['https://github.com/treeleaves30760', 'https://www.linkedin.com/in/hsupohsiang/', 'https://scholar.google.com/citations?user=J6DALFIAAAAJ']);
     expect(p['url']).toBe('https://www.treeleaves30760.com/');
   });
   it('uses the given image for the Person', () => {
